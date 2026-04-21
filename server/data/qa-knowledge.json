@@ -1,0 +1,39 @@
+{
+  "qaStrategy": {
+    "retrievalTopK": 5,
+    "rerankEnabled": true,
+    "similarityThreshold": 0.7,
+    "fallbackToGenerate": true,
+    "chunkSize": 500,
+    "overlap": 50
+  },
+  "evaluationSystem": {
+    "metrics": ["accuracy", "relevance", "faithfulness", "latency"],
+    "accuracyWeight": 0.4,
+    "relevanceWeight": 0.3,
+    "faithfulnessWeight": 0.2,
+    "latencyWeight": 0.1
+  },
+  "evalDatasets": [
+    {
+      "id": "ds-1",
+      "name": "默认评测集",
+      "description": "基础 QA 评测",
+      "projectId": "default",
+      "itemCount": 0,
+      "createdAt": "2025-01-01T00:00:00.000Z"
+    }
+  ],
+  "evalItems": [],
+  "modelEvaluations": [
+    {
+      "id": "eval-1",
+      "datasetId": "ds-1",
+      "modelName": "default",
+      "runAt": "2025-01-01T00:00:00.000Z",
+      "metrics": { "accuracy": 0, "relevance": 0, "faithfulness": 0, "latencyMs": 0 },
+      "totalCases": 0,
+      "passedCases": 0
+    }
+  ]
+}

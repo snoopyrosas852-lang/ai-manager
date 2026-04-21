@@ -1,0 +1,49 @@
+{
+  "welcomeMessage": "我是小仙，有什么我能帮你的吗？",
+  "welcomeSubtext": "选择对应工具，我能更好的解决你的问题",
+  "intentRewriteRules": [
+    {
+      "id": "rule-1",
+      "pattern": "违反.*中船考核红线",
+      "replacement": "触碰红线的订单",
+      "enabled": true,
+      "suggestedProjectId": "cssc",
+      "suggestedSkillIds": [
+        "product_query"
+      ]
+    }
+  ],
+  "toolbar": [
+    {
+      "id": "order_query",
+      "label": "订单查询",
+      "skillIds": [
+        "order_query",
+        "logistics_track",
+        "delivery_confirm"
+      ]
+    },
+    {
+      "id": "p",
+      "label": "商品查询",
+      "skillIds": [
+        "logistics_track",
+        "delivery_confirm"
+      ]
+    },
+    {
+      "id": "tool_1772429457273",
+      "label": "项目查询",
+      "skillIds": []
+    },
+    {
+      "id": "tool_1772759320399",
+      "label": "订单创建",
+      "skillIds": [
+        "order_query",
+        "logistics_track",
+        "delivery_confirm"
+      ]
+    }
+  ]
+}

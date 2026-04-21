@@ -1,0 +1,40 @@
+{
+  "planConfig": {
+    "enabled": true,
+    "maxSteps": 10,
+    "allowParallel": false,
+    "promptTemplate": "将用户请求分解为可执行的步骤。输出 JSON 数组：[{ \"step\": 1, \"action\": \"动作描述\", \"tool\": \"工具ID\", \"params\": {} }]"
+  },
+  "actionConfig": {
+    "trackExecutions": true,
+    "timeoutMs": 30000,
+    "retryCount": 2
+  },
+  "capabilityEvaluations": [
+    {
+      "id": "cap-1",
+      "name": "任务分解能力",
+      "description": "能否正确将复杂请求分解为子任务",
+      "metric": "plan_accuracy",
+      "weight": 0.3,
+      "lastScore": 0
+    },
+    {
+      "id": "cap-2",
+      "name": "工具调用能力",
+      "description": "能否正确选择并调用工具",
+      "metric": "action_success_rate",
+      "weight": 0.4,
+      "lastScore": 0
+    },
+    {
+      "id": "cap-3",
+      "name": "结果整合能力",
+      "description": "能否正确整合多步结果并回复",
+      "metric": "summary_quality",
+      "weight": 0.3,
+      "lastScore": 0
+    }
+  ],
+  "evalRuns": []
+}

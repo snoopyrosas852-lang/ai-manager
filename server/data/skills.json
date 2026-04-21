@@ -1,0 +1,110 @@
+[
+  {
+    "id": "order_query",
+    "name": "订单查询",
+    "description": "查询订单状态、物流信息、待交付/在途订单",
+    "instructions": "当用户询问订单、物流、发货、到货、待交付、在途等时使用。结合项目考核红线提醒用户。",
+    "useWhen": [
+      "查订单",
+      "物流到哪了",
+      "待交付",
+      "发货情况",
+      "本月在途"
+    ],
+    "doNotUse": [
+      "查商品规格",
+      "查价格",
+      "退货"
+    ],
+    "requires": {
+      "env": [],
+      "bins": [],
+      "config": []
+    },
+    "triggerExamples": [
+      "查订单",
+      "物流状态",
+      "待交付订单"
+    ],
+    "requiredApis": [
+      "order_list"
+    ],
+    "associatedProjects": [],
+    "enabled": false,
+    "userInvocable": true,
+    "disableModelInvocation": false,
+    "updatedAt": "2026-04-02T05:18:44.564Z"
+  },
+  {
+    "id": "product_query",
+    "name": "商品查询",
+    "description": "查询商品信息、规格、价格",
+    "instructions": "当用户询问商品详情、规格、价格、库存时使用。",
+    "useWhen": [
+      "查商品",
+      "产品规格",
+      "多少钱",
+      "有货吗"
+    ],
+    "doNotUse": [
+      "查订单",
+      "物流",
+      "签收"
+    ],
+    "requires": {
+      "env": [],
+      "bins": [],
+      "config": []
+    },
+    "triggerExamples": [
+      "查商品",
+      "产品规格"
+    ],
+    "requiredApis": [],
+    "associatedProjects": [],
+    "enabled": true,
+    "userInvocable": true,
+    "disableModelInvocation": false,
+    "updatedAt": "2026-03-10T00:00:00.000Z"
+  },
+  {
+    "id": "logistics_track",
+    "name": "logistics_track",
+    "description": "",
+    "instructions": "",
+    "useWhen": [],
+    "doNotUse": [],
+    "requires": {
+      "env": [],
+      "bins": [],
+      "config": []
+    },
+    "triggerExamples": [],
+    "requiredApis": [],
+    "associatedProjects": [],
+    "enabled": true,
+    "userInvocable": true,
+    "disableModelInvocation": false,
+    "updatedAt": "2026-04-08T00:53:24.814Z"
+  },
+  {
+    "id": "delivery_confirm",
+    "name": "delivery_confirm",
+    "description": "",
+    "instructions": "",
+    "useWhen": [],
+    "doNotUse": [],
+    "requires": {
+      "env": [],
+      "bins": [],
+      "config": []
+    },
+    "triggerExamples": [],
+    "requiredApis": [],
+    "associatedProjects": [],
+    "enabled": true,
+    "userInvocable": true,
+    "disableModelInvocation": false,
+    "updatedAt": "2026-04-08T00:53:24.814Z"
+  }
+]

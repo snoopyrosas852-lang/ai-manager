@@ -1,0 +1,109 @@
+{
+  "departments": [
+    {
+      "id": "dept-sales",
+      "name": "销售部",
+      "sort": 0,
+      "enabled": true
+    },
+    {
+      "id": "dept-fin",
+      "name": "财务部",
+      "sort": 1,
+      "enabled": true
+    }
+  ],
+  "nodes": [
+    {
+      "id": "kb-root-1",
+      "parentId": null,
+      "type": "folder",
+      "name": "共享资料",
+      "size": null,
+      "mime": null,
+      "storageKey": null,
+      "ownerUserId": "system",
+      "ownerUserLabel": "系统",
+      "ownerDeptId": "dept-sales",
+      "createdAt": "2026-04-15T02:26:58.475Z",
+      "updatedAt": "2026-04-15T02:26:58.475Z",
+      "sort": 0,
+      "deleted": false,
+      "excludeFromKb": false
+    },
+    {
+      "id": "ba0e4296-4823-4c38-a3ff-f0882fb2c853",
+      "parentId": "kb-root-1",
+      "type": "folder",
+      "name": "新建文件夹",
+      "size": null,
+      "mime": null,
+      "storageKey": null,
+      "ownerUserId": null,
+      "ownerUserLabel": "访客",
+      "ownerDeptId": "dept-sales",
+      "createdAt": "2026-04-15T05:21:08.061Z",
+      "updatedAt": "2026-04-16T02:48:48.447Z",
+      "sort": 0,
+      "deleted": true,
+      "excludeFromKb": false
+    },
+    {
+      "id": "90e265d7-52a2-46d1-abd5-fc4c2660ec71",
+      "parentId": "kb-root-1",
+      "type": "folder",
+      "name": "新建文件夹",
+      "size": null,
+      "mime": null,
+      "storageKey": null,
+      "ownerUserId": null,
+      "ownerUserLabel": "访客",
+      "ownerDeptId": "dept-sales",
+      "createdAt": "2026-04-15T05:21:10.639Z",
+      "updatedAt": "2026-04-15T05:21:10.639Z",
+      "sort": 1,
+      "deleted": false,
+      "excludeFromKb": false
+    }
+  ],
+  "acls": [
+    {
+      "id": "acl-1",
+      "nodeId": "kb-root-1",
+      "subjectType": "dept",
+      "subjectId": "dept-sales",
+      "permission": "write",
+      "inherit": true
+    },
+    {
+      "id": "acl-2",
+      "nodeId": "kb-root-1",
+      "subjectType": "dept",
+      "subjectId": "dept-fin",
+      "permission": "read",
+      "inherit": true
+    }
+  ],
+  "audit": [
+    {
+      "id": "e1df5f8b-5f74-42c9-86eb-bf9dc162b766",
+      "at": "2026-04-15T05:21:08.062Z",
+      "action": "folder_create",
+      "nodeId": "ba0e4296-4823-4c38-a3ff-f0882fb2c853",
+      "parentId": "kb-root-1"
+    },
+    {
+      "id": "a2374316-b546-42aa-95f0-1c206411a8ac",
+      "at": "2026-04-15T05:21:10.639Z",
+      "action": "folder_create",
+      "nodeId": "90e265d7-52a2-46d1-abd5-fc4c2660ec71",
+      "parentId": "kb-root-1"
+    },
+    {
+      "id": "9823de81-c307-433f-a601-a19ad6aac588",
+      "at": "2026-04-16T02:48:48.448Z",
+      "action": "delete",
+      "nodeId": "ba0e4296-4823-4c38-a3ff-f0882fb2c853"
+    }
+  ]
+}
