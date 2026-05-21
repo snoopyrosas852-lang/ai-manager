@@ -429,12 +429,13 @@ export default function DepartmentKnowledgePage() {
                     className="w-full text-xs border rounded px-1 py-1"
                     value={a.permission}
                     onChange={(e) => {
-                      const v = e.target.value as 'read' | 'write';
+                      const v = e.target.value as KbAcl['permission'];
                       setAcls((prev) => prev.map((x) => (x.id === a.id ? { ...x, permission: v } : x)));
                     }}
                   >
-                    <option value="read">只读</option>
-                    <option value="write">读写</option>
+                    <option value="read">只读（仅预览）</option>
+                    <option value="read_download">只读/下载</option>
+                    <option value="write">协作者（读写）</option>
                   </select>
                   <label className="flex items-center gap-1 text-xs text-slate-600">
                     <input

@@ -1,0 +1,97 @@
+{
+  "mode": "single_draft",
+  "versionLabel": "唯一生效版本",
+  "updatedAt": "2026-05-08T03:17:33.065Z",
+  "cards": [
+    {
+      "id": "card-xh-01",
+      "title": "物料类目匹配（咸亨平台）",
+      "subtitle": "基础字段负责前台展示，动作列表决定点击后的真实执行方式。",
+      "enabled": true,
+      "favoritable": true,
+      "actions": [
+        {
+          "id": "act-1",
+          "name": "类目匹配主流程",
+          "kind": "internal",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "id": "card-xh-02",
+      "title": "物料映射分析（咸亨平台）",
+      "subtitle": "下载模板并在既有映射工作流中提交；本页提供入口与留档说明。",
+      "enabled": true,
+      "favoritable": true,
+      "actions": [
+        {
+          "id": "act-2",
+          "name": "映射工作流",
+          "kind": "http",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "id": "card-xh-03",
+      "title": "商品对比智能分析（咸亨平台）",
+      "subtitle": "多商品参数对比与结论摘要（演示入口）。",
+      "enabled": true,
+      "favoritable": false,
+      "actions": [
+        {
+          "id": "act-3",
+          "name": "对比分析",
+          "kind": "internal",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "id": "card-xh-04",
+      "title": "商品图片稽查",
+      "subtitle": "按规则批量校验主图/附图，输出待整改清单。",
+      "enabled": true,
+      "favoritable": true,
+      "actions": [
+        {
+          "id": "act-4",
+          "name": "稽查任务",
+          "kind": "python",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "id": "card-xls-06",
+      "title": "CSV ⇄ Excel 互转",
+      "subtitle": "系统导出 CSV 转 xlsx 再分发。",
+      "enabled": true,
+      "favoritable": false,
+      "actions": [
+        {
+          "id": "act-5",
+          "name": "格式转换",
+          "kind": "internal",
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "id": "card-pdf-01",
+      "title": "PDF 合并",
+      "subtitle": "多份附件合成一份归档。",
+      "enabled": true,
+      "favoritable": false,
+      "actions": [
+        {
+          "id": "act-6",
+          "name": "合并任务",
+          "kind": "python",
+          "notes": ""
+        }
+      ]
+    }
+  ]
+}

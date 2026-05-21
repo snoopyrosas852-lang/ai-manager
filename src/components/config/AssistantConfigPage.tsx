@@ -419,7 +419,7 @@ function ToolbarEditor({
               <span className="text-sm font-medium text-gray-700">可用 Skills：</span>
               <div className="flex flex-wrap gap-2 mt-2">
                 {skills.length === 0 ? (
-                  <span className="text-gray-400 text-sm">暂无 Skill 列表，请先在 Skill 管理中维护</span>
+                  <span className="text-gray-400 text-sm">暂无 Skill 列表，请先在 Skill 配置中维护</span>
                 ) : (
                   skills.map((s) => (
                     <label key={s.id} className="inline-flex items-center gap-1.5 cursor-pointer">

@@ -1,0 +1,31 @@
+{
+  "defaultRoleId": "role-chat-toolbox",
+  "roles": [
+    {
+      "id": "role-all",
+      "name": "超级管理员",
+      "description": "默认可见全部导航模块",
+      "navModuleIds": [
+        "xiaoxian",
+        "toolbox",
+        "tasks",
+        "tender-materials",
+        "dept-knowledge",
+        "xiaoxian-avatar"
+      ]
+    },
+    {
+      "id": "role-chat-toolbox",
+      "name": "普通用户",
+      "description": "运营常用：对话 + 百宝箱",
+      "navModuleIds": [
+        "xiaoxian",
+        "toolbox",
+        "tasks",
+        "tender-materials",
+        "dept-knowledge",
+        "xiaoxian-avatar"
+      ]
+    }
+  ]
+}

@@ -1175,6 +1175,118 @@
       "projectId": null,
       "createdAt": "2026-04-15T04:17:03.115Z",
       "updatedAt": "2026-04-15T05:43:37.008Z"
+    },
+    {
+      "id": "sess-1778465922666",
+      "userId": 0,
+      "userName": "Demo用户",
+      "title": "你好",
+      "messageCount": 2,
+      "totalTokens": 0,
+      "totalCost": 0,
+      "rating": null,
+      "skill": null,
+      "projectId": null,
+      "createdAt": "2026-05-11T02:18:44.173Z",
+      "updatedAt": "2026-05-11T02:18:44.182Z"
+    },
+    {
+      "id": "sess-1778466202912",
+      "userId": 0,
+      "userName": "Demo用户",
+      "title": "你好",
+      "messageCount": 2,
+      "totalTokens": 0,
+      "totalCost": 0,
+      "rating": null,
+      "skill": null,
+      "projectId": null,
+      "createdAt": "2026-05-11T02:23:24.301Z",
+      "updatedAt": "2026-05-11T02:23:24.311Z"
+    },
+    {
+      "id": "sess-1778466483395",
+      "userId": 0,
+      "userName": "Demo用户",
+      "title": "你好",
+      "messageCount": 2,
+      "totalTokens": 0,
+      "totalCost": 0,
+      "rating": null,
+      "skill": null,
+      "projectId": null,
+      "createdAt": "2026-05-11T02:28:04.776Z",
+      "updatedAt": "2026-05-11T02:28:04.793Z"
+    },
+    {
+      "id": "sess-1778466667218",
+      "userId": 0,
+      "userName": "Demo用户",
+      "title": "你好",
+      "messageCount": 6,
+      "totalTokens": 0,
+      "totalCost": 0,
+      "rating": null,
+      "skill": null,
+      "projectId": null,
+      "createdAt": "2026-05-11T02:31:08.660Z",
+      "updatedAt": "2026-05-11T02:32:03.804Z"
+    },
+    {
+      "id": "sess-1778466955329",
+      "userId": 0,
+      "userName": "Demo用户",
+      "title": "你好",
+      "messageCount": 2,
+      "totalTokens": 0,
+      "totalCost": 0,
+      "rating": null,
+      "skill": null,
+      "projectId": null,
+      "createdAt": "2026-05-11T02:35:56.763Z",
+      "updatedAt": "2026-05-11T02:35:56.775Z"
+    },
+    {
+      "id": "ava-ava-procurement-1778467254915",
+      "userId": 0,
+      "userName": "Demo用户",
+      "title": "采购询价分身",
+      "messageCount": 2,
+      "totalTokens": 0,
+      "totalCost": 0,
+      "rating": null,
+      "skill": null,
+      "projectId": null,
+      "createdAt": "2026-05-11T02:40:59.634Z",
+      "updatedAt": "2026-05-11T02:40:59.643Z"
+    },
+    {
+      "id": "ava-ava-procurement-1778467278720",
+      "userId": 0,
+      "userName": "Demo用户",
+      "title": "采购询价分身",
+      "messageCount": 2,
+      "totalTokens": 0,
+      "totalCost": 0,
+      "rating": null,
+      "skill": null,
+      "projectId": null,
+      "createdAt": "2026-05-11T02:41:22.443Z",
+      "updatedAt": "2026-05-11T02:41:22.452Z"
+    },
+    {
+      "id": "sess-1778467290514",
+      "userId": 0,
+      "userName": "Demo用户",
+      "title": "测试",
+      "messageCount": 0,
+      "totalTokens": 0,
+      "totalCost": 0,
+      "rating": null,
+      "skill": null,
+      "projectId": null,
+      "createdAt": "2026-05-11T02:41:31.896Z",
+      "updatedAt": "2026-05-11T02:41:31.906Z"
     }
   ],
   "messagesBySession": {
@@ -13702,6 +13814,280 @@
         "debug": null,
         "feedback": null
       }
-    ]
+    ],
+    "sess-1778465922666": [
+      {
+        "id": "u-1778465922303",
+        "role": "user",
+        "content": "你好",
+        "msgType": "text",
+        "cardData": null,
+        "createdAt": "2026-05-11T02:18:44.182Z",
+        "debug": null,
+        "feedback": null
+      },
+      {
+        "id": "a-1778465922303",
+        "role": "assistant",
+        "content": "你好！我是咸亨国际的AI助手小仙，可以帮你推荐商品或查询订单物流。请点击输入框下方的「商品推荐」工具，描述品牌、型号或用途，我会为你匹配合适的商品和链接哦~",
+        "msgType": "text",
+        "cardData": null,
+        "createdAt": "2026-05-11T02:18:44.182Z",
+        "debug": null,
+        "feedback": null
+      }
+    ],
+    "sess-1778466202912": [
+      {
+        "id": "u-1778466202593",
+        "role": "user",
+        "content": "你好",
+        "msgType": "text",
+        "cardData": null,
+        "createdAt": "2026-05-11T02:23:24.311Z",
+        "debug": null,
+        "feedback": null
+      },
+      {
+        "id": "a-1778466202593",
+        "role": "assistant",
+        "content": "您好，您需要的是企业采购相关的商品。根据您的需求，系统未返回明确的类目信息，因此我根据描述进行了品类推断。下方商品多为工业用品和检测设备，与企业采购场景相关，例如3M的防护手套和哈希的水质检测仪。\n\n",
+        "msgType": "product_recommend",
+        "cardData": {
+          "type": "product_recommend",
+          "data": {
+            "parsed": {
+              "productName": null,
+              "productDescription": null,
+              "brand": null,
+              "model": null
+            },
+            "category": null,
+            "products": [
+              {
+                "id": "xh-m1",
+                "name": "丁腈防护手套",
+                "brand": "3M",
+                "model": "3747",
+                "image": "https://picsum.photos/seed/xhm1/280/280",
+                "price": 12.8,
+                "similarity": 0.94,
+                "matchReason": "与「工业防护、手部」场景高度匹配",
+                "url": "https://www.xhbyh.com/product/xh-m1"
+              },
+              {
+                "id": "xh-m2",
+                "name": "耐油防滑手套",
+                "brand": "霍尼韦尔",
+                "model": "NK803",
+                "image": "https://picsum.photos/seed/xhm2/280/280",
+                "price": 18.5,
+                "similarity": 0.91,
+                "matchReason": "关键词「手套」语义相近",
+                "url": "https://www.xhbyh.com/product/xh-m2"
+              },
+              {
+                "id": "xh-g1",
+                "name": "便携式汽油发电机",
+                "brand": "雅马哈",
+                "model": "EF2000iS",
+                "image": "https://picsum.photos/seed/xhg1/280/280",
+                "price": 4580,
+                "similarity": 0.96,
+                "matchReason": "明确匹配「发电机」品类",
+                "url": "https://www.xhbyh.com/product/xh-g1"
+              },
+              {
+                "id": "xh-g2",
+                "name": "开架式柴油发电机",
+                "brand": "宗申",
+                "model": "ZS6500",
+                "image": "https://picsum.photos/seed/xhg2/280/280",
+                "price": 3299,
+                "similarity": 0.89,
+                "matchReason": "大功率应急发电场景",
+                "url": "https://www.xhbyh.com/product/xh-g2"
+              },
+              {
+                "id": "xh-w1",
+                "name": "多参数水质检测仪",
+                "brand": "哈希",
+                "model": "HQ2200",
+                "image": "https://picsum.photos/seed/xhw1/280/280",
+                "price": 12800,
+                "similarity": 0.93,
+                "matchReason": "匹配「水质检测」专业仪器",
+                "url": "https://www.xhbyh.com/product/xh-w1"
+              },
+              {
+                "id": "xh-w2",
+                "name": "便携式 pH 水质分析仪",
+                "brand": "雷磁",
+                "model": "PHB-4",
+                "image": "https://picsum.photos/seed/xhw2/280/280",
+                "price": 2680,
+                "similarity": 0.87,
+                "matchReason": "实验室/现场快速检测",
+                "url": "https://www.xhbyh.com/product/xh-w2"
+              }
+            ]
+          }
+        },
+        "createdAt": "2026-05-11T02:23:24.311Z",
+        "debug": null,
+        "feedback": null
+      }
+    ],
+    "sess-1778466483395": [
+      {
+        "id": "u-1778466483388",
+        "role": "user",
+        "content": "你好",
+        "msgType": "text",
+        "cardData": null,
+        "createdAt": "2026-05-11T02:28:04.793Z",
+        "debug": null,
+        "feedback": null
+      },
+      {
+        "id": "a-1778466483388",
+        "role": "assistant",
+        "content": "你好！我是咸亨国际的AI助手小仙，可以帮你推荐商品或查询订单物流。请点击输入框下方的「商品推荐」工具，描述品牌、型号或用途，我会为你匹配合适的商品和链接哦~",
+        "msgType": "text",
+        "cardData": null,
+        "createdAt": "2026-05-11T02:28:04.793Z",
+        "debug": null,
+        "feedback": null
+      }
+    ],
+    "sess-1778466667218": [
+      {
+        "id": "u-1778466667213",
+        "role": "user",
+        "content": "你好",
+        "msgType": "text",
+        "cardData": null,
+        "createdAt": "2026-05-11T02:32:03.804Z",
+        "debug": null,
+        "feedback": null
+      },
+      {
+        "id": "a-1778466667213",
+        "role": "assistant",
+        "content": "你好！我是咸亨国际的AI助理小仙，可以帮你推荐商品或查询订单物流。如果你有采购需求，可以直接告诉我品牌、型号或用途，我会为你推荐合适的商品链接。需要的话，也可以帮你查询订单信息哦！",
+        "msgType": "text",
+        "cardData": null,
+        "createdAt": "2026-05-11T02:32:03.804Z",
+        "debug": null,
+        "feedback": null
+      },
+      {
+        "id": "u-1778466718772",
+        "role": "user",
+        "content": "什么是商品推荐技能",
+        "msgType": "text",
+        "cardData": null,
+        "createdAt": "2026-05-11T02:32:03.804Z",
+        "debug": null,
+        "feedback": null
+      },
+      {
+        "id": "a-1778466718772",
+        "role": "assistant",
+        "content": "嗨！我是小仙，咸亨国际的AI助理。我的「商品推荐」技能就是根据你提供的工业品或MRO物资的名称、用途、规格等信息，快速帮你找到合适的商品推荐。比如你可以说：“我要找耐高温的密封圈”，我就能给你推荐相关产品。需要的话，直接点选「商品推荐」，告诉我你的需求，马上为你服务！有什么需要帮忙的吗？😊",
+        "msgType": "text",
+        "cardData": null,
+        "createdAt": "2026-05-11T02:32:03.804Z",
+        "debug": null,
+        "feedback": null
+      },
+      {
+        "id": "u-1778466722108",
+        "role": "user",
+        "content": "继续聊聊",
+        "msgType": "text",
+        "cardData": null,
+        "createdAt": "2026-05-11T02:32:03.804Z",
+        "debug": null,
+        "feedback": null
+      },
+      {
+        "id": "a-1778466722108",
+        "role": "assistant",
+        "content": "你好呀！很高兴继续和你聊天。如果你有任何关于采购、MRO工业品方面的问题，或者需要推荐合适的商品，随时告诉我哦~ 点选「商品推荐」后，用一句话或一段规格描述所需工业品/MRO，即可获得类目与商品推荐；有权限时也可查询订单与履约信息。需要我帮忙整理采购询价的维度、规格字段或是比价要点吗？",
+        "msgType": "text",
+        "cardData": null,
+        "createdAt": "2026-05-11T02:32:03.804Z",
+        "debug": null,
+        "feedback": null
+      }
+    ],
+    "sess-1778466955329": [
+      {
+        "id": "u-1778466955323",
+        "role": "user",
+        "content": "你好",
+        "msgType": "text",
+        "cardData": null,
+        "createdAt": "2026-05-11T02:35:56.775Z",
+        "debug": null,
+        "feedback": null
+      },
+      {
+        "id": "a-1778466955323",
+        "role": "assistant",
+        "content": "你好！我是咸亨国际的AI助理「小仙」，可以帮你推荐商品或查询订单物流等信息。请点击输入框下方的「商品推荐」工具，告诉我你需要的 brand/型号/用途 或粘贴规格，我会为你匹配商城类目并推荐相似商品与链接。",
+        "msgType": "text",
+        "cardData": null,
+        "createdAt": "2026-05-11T02:35:56.775Z",
+        "debug": null,
+        "feedback": null
+      }
+    ],
+    "ava-ava-procurement-1778467254915": [
+      {
+        "id": "u-1778467258326",
+        "role": "user",
+        "content": "水电费",
+        "msgType": "text",
+        "cardData": null,
+        "createdAt": "2026-05-11T02:40:59.643Z",
+        "debug": null,
+        "feedback": null
+      },
+      {
+        "id": "a-1778467258326",
+        "role": "assistant",
+        "content": "您好，您提到的“水电费”属于运营成本类支出，我需要更多信息来帮助您整理采购或报销相关事宜。请问您需要哪方面的协助？例如：水电设备采购、费用报销流程，还是其他相关内容？",
+        "msgType": "text",
+        "cardData": null,
+        "createdAt": "2026-05-11T02:40:59.643Z",
+        "debug": null,
+        "feedback": null
+      }
+    ],
+    "ava-ava-procurement-1778467278720": [
+      {
+        "id": "u-1778467280827",
+        "role": "user",
+        "content": "水电费",
+        "msgType": "text",
+        "cardData": null,
+        "createdAt": "2026-05-11T02:41:22.452Z",
+        "debug": null,
+        "feedback": null
+      },
+      {
+        "id": "a-1778467280827",
+        "role": "assistant",
+        "content": "您好，您提到的“水电费”可能需要更具体的设备或服务信息，例如品牌、型号、用途等。您可以点击输入框下方的「商品推荐」工具，我会根据您提供的信息为您匹配相关商品或服务。如果您有其他采购需求，也可以随时告诉我！",
+        "msgType": "text",
+        "cardData": null,
+        "createdAt": "2026-05-11T02:41:22.452Z",
+        "debug": null,
+        "feedback": null
+      }
+    ],
+    "sess-1778467290514": []
   }
 }

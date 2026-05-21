@@ -27,7 +27,8 @@ export interface KbAcl {
   nodeId: string;
   subjectType: string;
   subjectId: string;
-  permission: 'read' | 'write';
+  /** 只读=仅预览；只读/下载=预览+下载；协作者=写（上传/删/改名等） */
+  permission: 'read' | 'read_download' | 'write';
   inherit: boolean;
 }
 

@@ -18,13 +18,49 @@ import {
   getToolboxFeedbackForExport,
   getToolboxActivityForExport,
 } from './toolboxStore.js';
+import { getToolboxConfig, setToolboxConfig } from './toolboxConfigStore.js';
+import {
+  getNavRolesPayload,
+  setNavRolesPayload,
+  resolveSidebarForHttpRequest,
+} from './navRoleStore.js';
 import { registerKnowledgeBaseRoutes } from './knowledgeBaseRoutes.js';
+import {
+  listAvatarAgentsAdmin,
+  listAvatarAgentsPublic,
+  getAvatarAgentPublicById,
+  upsertAvatarAgent,
+  deleteAvatarAgent,
+} from './avatarAgentsStore.js';
 
 const app = express();
 const PORT = process.env.PORT || 3101;
 
 app.use(cors({ origin: '*' }));
 app.use(express.json({ limit: '35mb' }));
+
+registerKnowledgeBaseRoutes(app);
+
+// 便于浏览器直接访问确认服务存活
+app.get('/', (req, res) => {
+  res.json({
+    service: 'ai-manager-backend-api',
+    status: 'ok',
+    docs: [
+      '/health',
+      '/api/public/assistant-config',
+      '/api/public/nav-sidebar',
+      '/api/public/avatar-agents',
+      '/api/auth/me',
+      '/api/kb/me/nodes',
+      '/api/admin/kb/departments',
+    ],
+  });
+});
+
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
 
 /** 鉴权：管理后台前端会请求 /api/auth/me，无此接口会 404 导致白屏或反复跳登录 */
 app.get('/api/auth/me', (req, res) => {
@@ -36,6 +72,15 @@ app.get('/api/auth/me', (req, res) => {
       id: 1005,
       name: '调试管理员',
       role: 'admin',
+      salesCode: null,
+      managedProjects: [],
+    });
+  }
+  if (t === 'user' || t === 'demo-user') {
+    return res.json({
+      id: 1006,
+      name: '调试普通用户',
+      role: 'user',
       salesCode: null,
       managedProjects: [],
     });
@@ -343,6 +388,60 @@ app.get('/api/public/assistant-config', (req, res) => {
   }
 });
 
+/** 公开：按登录身份返回左侧导航（Bearer：dev/test=超管全部模块；user/demo-user=普通三模块；无 token 不可凭 query 冒充超管） */
+app.get('/api/public/nav-sidebar', (req, res) => {
+  try {
+    res.json(resolveSidebarForHttpRequest(req));
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/** 小仙分身：公开卡片列表（无设定全文） */
+app.get('/api/public/avatar-agents', (req, res) => {
+  try {
+    res.json({ items: listAvatarAgentsPublic() });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/** 小仙分身：公开详情（含 systemPrompt，供前台拉起对话上下文） */
+app.get('/api/public/avatar-agents/:id', (req, res) => {
+  try {
+    const agent = getAvatarAgentPublicById(req.params.id);
+    if (!agent) return res.status(404).json({ error: 'Not found' });
+    res.json(agent);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ---------- 导航角色（管理端配置，控制前台左侧栏） ----------
+app.get('/api/admin/nav-roles', (req, res) => {
+  try {
+    res.json(getNavRolesPayload());
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.put('/api/admin/nav-roles', (req, res) => {
+  try {
+    res.json(setNavRolesPayload(req.body));
+  } catch (err) {
+    if (err.code === 'VALIDATION') {
+      return res.status(400).json({ error: err.message });
+    }
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ---------- 意图识别：意图体系、Prompt、迭代优化、多轮对话、意图切换 ----------
 app.get('/api/admin/intent-system', (req, res) => {
   try {
@@ -518,8 +617,6 @@ app.get('/api/admin/toolbox/export/feedback', (req, res) => {
   }
 });
 
-registerKnowledgeBaseRoutes(app);
-
 app.get('/api/admin/toolbox/export/activity', (req, res) => {
   try {
     const list = getToolboxActivityForExport();
@@ -547,6 +644,74 @@ app.get('/api/admin/toolbox/export/activity', (req, res) => {
   }
 });
 
+/** 百宝箱编排配置（卡片 / 动作草稿，管理后台编辑） */
+app.get('/api/admin/toolbox/config', (req, res) => {
+  try {
+    res.json(getToolboxConfig());
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.put('/api/admin/toolbox/config', (req, res) => {
+  try {
+    res.json(setToolboxConfig(req.body));
+  } catch (err) {
+    if (err.code === 'VALIDATION') {
+      return res.status(400).json({ error: err.message });
+    }
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ---------- 小仙分身智能体配置 ----------
+app.get('/api/admin/avatar-agents', (req, res) => {
+  try {
+    res.json(listAvatarAgentsAdmin());
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/admin/avatar-agents', (req, res) => {
+  try {
+    res.json(upsertAvatarAgent(req.body || {}));
+  } catch (err) {
+    if (err.code === 'VALIDATION') {
+      return res.status(400).json({ error: err.message });
+    }
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.put('/api/admin/avatar-agents/:id', (req, res) => {
+  try {
+    res.json(upsertAvatarAgent({ ...(req.body || {}), id: req.params.id }));
+  } catch (err) {
+    if (err.code === 'VALIDATION') {
+      return res.status(400).json({ error: err.message });
+    }
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete('/api/admin/avatar-agents/:id', (req, res) => {
+  try {
+    res.json(deleteAvatarAgent(req.params.id));
+  } catch (err) {
+    if (err.code === 'VALIDATION') {
+      return res.status(400).json({ error: err.message });
+    }
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`管理后台 API: http://localhost:${PORT}（局域网可访问）`);
   console.log('  GET  /api/auth/me                  鉴权（dev/test token 返回管理员）');
@@ -560,6 +725,9 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log('  GET  /api/admin/assistant-config     前台配置（管理）');
   console.log('  PUT  /api/admin/assistant-config     更新前台配置');
   console.log('  GET  /api/public/assistant-config     前台配置（公开，供助理拉取）');
+  console.log('  GET  /api/public/nav-sidebar          左侧导航（按角色，供小仙前台）');
+  console.log('  GET  /api/admin/nav-roles             导航角色列表');
+  console.log('  PUT  /api/admin/nav-roles             保存导航角色');
   console.log('  GET  /api/admin/intent-system        意图识别配置');
   console.log('  PUT  /api/admin/intent-system        更新意图识别');
   console.log('  GET  /api/admin/qa-knowledge         QA 知识库配置');
@@ -571,6 +739,10 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log('  GET  /api/admin/toolbox/export/apps     百宝箱应用列表 CSV');
   console.log('  GET  /api/admin/toolbox/export/feedback 百宝箱意见箱 CSV');
   console.log('  GET  /api/admin/toolbox/export/activity 百宝箱动态流水 CSV');
-  console.log('  [部门知识库] GET/POST /api/admin/kb/*  管理端');
-  console.log('  [部门资料/受管/问答] /api/kb/me/*     小仙前台（X-Dept-Ids，含 V1.0.2）');
+  console.log('  GET  /api/admin/toolbox/config         百宝箱编排配置');
+  console.log('  PUT  /api/admin/toolbox/config         保存百宝箱编排配置');
+  console.log('  GET  /api/public/avatar-agents         小仙分身列表（公开）');
+  console.log('  GET  /api/admin/avatar-agents          小仙分身配置（管理）');
+  console.log('  GET  /api/kb/me/nodes …               部门知识库（小仙前台，需 X-Dept-Ids）');
+  console.log('  GET  /api/admin/kb/departments …        部门知识库（管理端）');
 });

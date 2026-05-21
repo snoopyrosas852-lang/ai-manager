@@ -19,11 +19,15 @@ import {
   writeBlob,
   readBlob,
   renameNode,
+  updateNodeMeta,
   moveNode,
   softDeleteNode,
   searchNodesAdmin,
   canReadNode,
   canWriteInFolder,
+  canWriteAtKnowledgeRoot,
+  canDownloadFile,
+  canDownloadFilesInFolder,
   totalUsedBytes,
   nodeById,
   userCanSeeNode,
@@ -128,11 +132,12 @@ export function registerKnowledgeBaseRoutes(app) {
   app.post('/api/admin/kb/nodes', (req, res) => {
     try {
       const db = readDb();
-      const { parentId, name, ownerDeptId } = req.body || {};
+      const { parentId, name, description, ownerDeptId } = req.body || {};
       const pid = parentId === undefined || parentId === 'null' ? null : parentId;
       const id = createFolder(db, {
         parentId: pid,
         name,
+        description,
         ownerDeptId: ownerDeptId || null,
         ownerUserLabel: '管理员',
       });
@@ -247,7 +252,12 @@ export function registerKnowledgeBaseRoutes(app) {
         if (n.deleted || n.type !== 'file') continue;
         if (canReadNode(db, n.id, deptIds)) used += n.size || 0;
       }
-      res.json({ usedBytes: used, quotaBytes: KB_QUOTA_BYTES, deptIds });
+      res.json({
+        usedBytes: used,
+        quotaBytes: KB_QUOTA_BYTES,
+        deptIds,
+        canWriteRoot: canWriteAtKnowledgeRoot(db, deptIds),
+      });
     } catch (e) {
       res.status(500).json({ error: e.message });
     }
@@ -260,17 +270,54 @@ export function registerKnowledgeBaseRoutes(app) {
         return res.status(403).json({ error: 'no_dept', message: '缺少部门上下文（X-Dept-Ids）' });
       }
       const db = readDb();
+
+      if (req.query.flat === '1') {
+        const items = db.nodes.filter((n) => !n.deleted && userCanSeeNode(db, n, deptIds));
+        items.sort((a, b) => {
+          if (a.type !== b.type) return a.type === 'folder' ? -1 : 1;
+          return String(a.name).localeCompare(String(b.name), 'zh-Hans-CN');
+        });
+        res.json({
+          items: items.map((n) => ({
+            id: n.id,
+            parentId: n.parentId,
+            type: n.type,
+            name: n.name,
+            description: n.description || '',
+            size: n.size,
+            mime: n.mime,
+            ownerUserLabel: n.ownerUserLabel,
+            ownerDeptId: n.ownerDeptId,
+            createdAt: n.createdAt,
+            updatedAt: n.updatedAt,
+            canWrite: n.type === 'folder' ? canWriteInFolder(db, n.id, deptIds) : false,
+            canDownload: n.type === 'file' ? canDownloadFile(db, n, deptIds) : false,
+            excludeFromKb: n.type === 'folder' ? !!n.excludeFromKb : undefined,
+          })),
+        });
+        return;
+      }
+
       const parentId =
         req.query.parentId === undefined || req.query.parentId === '' || req.query.parentId === 'null'
           ? null
           : req.query.parentId;
       const items = listChildrenForUser(db, parentId, deptIds);
+      const folderCaps =
+        parentId != null
+          ? {
+              canWrite: canWriteInFolder(db, parentId, deptIds),
+              canDownload: canDownloadFilesInFolder(db, parentId, deptIds),
+            }
+          : undefined;
       res.json({
+        folderCaps,
         items: items.map((n) => ({
           id: n.id,
           parentId: n.parentId,
           type: n.type,
           name: n.name,
+          description: n.description || '',
           size: n.size,
           mime: n.mime,
           ownerUserLabel: n.ownerUserLabel,
@@ -278,6 +325,7 @@ export function registerKnowledgeBaseRoutes(app) {
           createdAt: n.createdAt,
           updatedAt: n.updatedAt,
           canWrite: n.type === 'folder' ? canWriteInFolder(db, n.id, deptIds) : false,
+          canDownload: n.type === 'file' ? canDownloadFile(db, n, deptIds) : false,
           excludeFromKb: n.type === 'folder' ? !!n.excludeFromKb : undefined,
         })),
       });
@@ -291,15 +339,18 @@ export function registerKnowledgeBaseRoutes(app) {
       const deptIds = parseDeptIds(req);
       if (!deptIds.length) return res.status(403).json({ error: 'no_dept' });
       const db = readDb();
-      const { parentId, name } = req.body || {};
-      const pid = parentId === undefined || parentId === 'null' ? null : parentId;
-      if (!pid || !canWriteInFolder(db, pid, deptIds)) {
+      const { parentId, name, description } = req.body || {};
+      const pid = parentId === undefined || parentId === 'null' || parentId === '' ? null : parentId;
+      if (pid) {
+        if (!canWriteInFolder(db, pid, deptIds)) return res.status(403).json({ error: 'no_write' });
+      } else if (!canWriteAtKnowledgeRoot(db, deptIds)) {
         return res.status(403).json({ error: 'no_write' });
       }
       const primary = deptIds[0];
       const id = createFolder(db, {
         parentId: pid,
         name,
+        description,
         ownerDeptId: primary,
         ownerUserLabel: parseUserLabel(req),
       });
@@ -344,8 +395,10 @@ export function registerKnowledgeBaseRoutes(app) {
       if (!n || !userCanSeeNode(db, n, deptIds)) return res.status(404).json({ error: 'not_found' });
       const parent = n.parentId ? nodeById(db, n.parentId) : null;
       if (!parent || !canWriteInFolder(db, parent.id, deptIds)) return res.status(403).json({ error: 'no_write' });
-      const { name } = req.body || {};
-      if (name != null) renameNode(db, req.params.id, name);
+      const { name, description } = req.body || {};
+      if (name != null || description !== undefined) {
+        updateNodeMeta(db, req.params.id, { name, description });
+      }
       res.json({ ok: true });
     } catch (e) {
       res.status(500).json({ error: e.message });
@@ -367,12 +420,32 @@ export function registerKnowledgeBaseRoutes(app) {
     }
   });
 
-  app.get('/api/kb/me/download/:id', (req, res) => {
+  /** 仅预览/内嵌：只读及以上；响应 inline，不作为附件下载 */
+  app.get('/api/kb/me/view/:id', (req, res) => {
     try {
       const deptIds = parseDeptIds(req);
       const db = readDb();
       const n = nodeById(db, req.params.id);
       if (!n || n.type !== 'file' || !canReadNode(db, n.id, deptIds)) {
+        return res.status(404).end();
+      }
+      const buf = readBlob(n.id);
+      if (!buf) return res.status(404).end();
+      res.setHeader('Content-Type', n.mime || 'application/octet-stream');
+      res.setHeader('Content-Disposition', `inline; filename*=UTF-8''${encodeURIComponent(n.name)}`);
+      res.send(buf);
+    } catch (e) {
+      res.status(500).end();
+    }
+  });
+
+  /** 附件下载：需 只读/下载 或 协作者 */
+  app.get('/api/kb/me/download/:id', (req, res) => {
+    try {
+      const deptIds = parseDeptIds(req);
+      const db = readDb();
+      const n = nodeById(db, req.params.id);
+      if (!n || n.type !== 'file' || !canDownloadFile(db, n, deptIds)) {
         return res.status(404).end();
       }
       const buf = readBlob(n.id);

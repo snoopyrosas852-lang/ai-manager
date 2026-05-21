@@ -12,19 +12,13 @@ import DevLogin from './pages/DevLogin';
 const CostDashboard = React.lazy(() => import('./components/cost/CostDashboard'));
 const SessionList = React.lazy(() => import('./components/sessions/SessionList'));
 const SessionDetail = React.lazy(() => import('./components/sessions/SessionDetail'));
-const PromptDebug = React.lazy(() => import('./components/debug/PromptDebug'));
-const TestBench = React.lazy(() => import('./components/testbench/TestBench'));
 const SkillManager = React.lazy(() => import('./components/config/SkillManager'));
 const AssistantConfigPage = React.lazy(() => import('./components/config/AssistantConfigPage'));
-const ProjectManager = React.lazy(() => import('./components/config/ProjectManager'));
-const KnowledgeEditor = React.lazy(() => import('./components/config/KnowledgeEditor'));
+const ToolboxConfigPage = React.lazy(() => import('./components/config/ToolboxConfigPage'));
 const UserManager = React.lazy(() => import('./components/config/UserManager'));
-const IntentSystemPage = React.lazy(() => import('./components/intent/IntentSystemPage'));
-const QAKnowledgePage = React.lazy(() => import('./components/qa/QAKnowledgePage'));
-const AgentConfigPage = React.lazy(() => import('./components/agent/AgentConfigPage'));
+const RoleManager = React.lazy(() => import('./components/config/RoleManager'));
+const XiaoxianAvatarAgentsPage = React.lazy(() => import('./components/config/XiaoxianAvatarAgentsPage'));
 const ToolboxMarketPage = React.lazy(() => import('./components/toolbox/ToolboxMarketPage'));
-const DepartmentKnowledgePage = React.lazy(() => import('./components/knowledge/DepartmentKnowledgePage'));
-const ManagedCorpusPage = React.lazy(() => import('./components/knowledge/ManagedCorpusPage'));
 
 // ---------------------------------------------------------------------------
 // Route wrappers
@@ -88,27 +82,22 @@ export default function App() {
               <Route path="/sessions/:id" element={<SessionDetail />} />
               <Route path="/toolbox-market" element={<ToolboxMarketPage />} />
 
-              {/* 开发工具 — admin only */}
-              <Route path="/debug" element={<AdminOnly><PromptDebug /></AdminOnly>} />
-              <Route path="/testbench" element={<AdminOnly><TestBench /></AdminOnly>} />
-              <Route path="/intent" element={<AdminOnly><IntentSystemPage /></AdminOnly>} />
-              <Route path="/qa-knowledge" element={<AdminOnly><QAKnowledgePage /></AdminOnly>} />
-              <Route path="/agent" element={<AdminOnly><AgentConfigPage /></AdminOnly>} />
+              {/* 已下线菜单：旧链接重定向 */}
+              <Route path="/debug" element={<Navigate to="/cost" replace />} />
+              <Route path="/testbench" element={<Navigate to="/cost" replace />} />
+              <Route path="/intent" element={<Navigate to="/cost" replace />} />
+              <Route path="/qa-knowledge" element={<Navigate to="/cost" replace />} />
+              <Route path="/agent" element={<Navigate to="/cost" replace />} />
+              <Route path="/config/projects" element={<Navigate to="/config/assistant" replace />} />
+              <Route path="/config/knowledge" element={<Navigate to="/config/assistant" replace />} />
 
-              {/* 系统配置 */}
+              {/* 系统配置（前台 / 百宝箱 / Skill / 用户权限） */}
               <Route path="/config/assistant" element={<AdminOnly><AssistantConfigPage /></AdminOnly>} />
+              <Route path="/config/toolbox" element={<AdminOnly><ToolboxConfigPage /></AdminOnly>} />
               <Route path="/config/skills" element={<AdminOnly><SkillManager /></AdminOnly>} />
-              <Route path="/config/projects" element={<AdminOnly><ProjectManager /></AdminOnly>} />
-              <Route path="/config/knowledge" element={<KnowledgeEditor />} />
-              <Route
-                path="/config/department-knowledge"
-                element={<AdminOnly><DepartmentKnowledgePage /></AdminOnly>}
-              />
-              <Route
-                path="/config/managed-corpus"
-                element={<AdminOnly><ManagedCorpusPage /></AdminOnly>}
-              />
               <Route path="/config/users" element={<AdminOnly><UserManager /></AdminOnly>} />
+              <Route path="/config/roles" element={<AdminOnly><RoleManager /></AdminOnly>} />
+              <Route path="/config/xiaoxian-avatar" element={<AdminOnly><XiaoxianAvatarAgentsPage /></AdminOnly>} />
 
               {/* 无权限页 */}
               <Route path="/unauthorized" element={<UnauthorizedPage />} />

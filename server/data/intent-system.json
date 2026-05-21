@@ -1,82 +1,56 @@
 {
-  "intentSystem": {
-    "intents": [
-      {
-        "id": "order_query",
-        "name": "订单查询",
-        "description": "用户查询订单状态、物流信息",
-        "skillIds": [
-          "order_query",
-          "logistics_track"
-        ],
-        "examples": [
-          "查订单",
-          "订单到哪了",
-          "物流状态"
-        ],
-        "parentId": null
-      },
-      {
-        "id": "product_query",
-        "name": "商品查询",
-        "description": "用户查询商品信息",
-        "skillIds": [
-          "product_query"
-        ],
-        "examples": [
-          "查商品",
-          "产品规格"
-        ],
-        "parentId": null
+  "systemPrompt": "你是一个意图识别助手。根据用户消息和对话历史，识别用户意图。\n\n可用意图：{{intents}}\n\n输出 JSON：{ \"skill\": \"技能ID\", \"intent\": \"意图描述\", \"apiParams\": {}, \"confidence\": 0.0-1.0 }",
+  "multiTurnRules": [
+    {
+      "id": "rule-1",
+      "condition": "用户消息少于5字且无明确动作",
+      "action": "clarify",
+      "suggestedQuestion": "您是想查询订单、商品还是其他？"
+    }
+  ],
+  "intentSwitchRules": [
+    {
+      "id": "sw-1",
+      "triggerKeywords": [
+        "换个",
+        "不是",
+        "我要查",
+        "改成"
+      ],
+      "action": "reset_context",
+      "description": "用户明确表达切换意图时重置上下文"
+    }
+  ],
+  "iterations": [
+    {
+      "id": "v1",
+      "version": 1,
+      "promptSnapshot": "初始版本",
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "metrics": {
+        "accuracy": 0.85,
+        "latencyMs": 120
       }
-    ],
-    "prompts": {
-      "intentRecognition": "你是一个意图识别助手。根据用户消息和对话历史，识别用户意图。\n\n可用意图：{{intents}}\n\n输出 JSON：{ \"skill\": \"技能ID\", \"intent\": \"意图描述\", \"apiParams\": {}, \"confidence\": 0.0-1.0 }",
-      "intentSwitch": "当用户明确表达新需求或话题转换时，应切换意图。例如：从订单查询切换到商品查询。",
-      "multiTurnClarification": "若用户表达不完整，可追问澄清。追问应简洁、具体。"
     },
-    "iterations": [
-      {
-        "id": "v1",
-        "version": 1,
-        "promptSnapshot": "初始版本",
-        "createdAt": "2025-01-01T00:00:00.000Z",
-        "metrics": {
-          "accuracy": 0.85,
-          "latencyMs": 120
-        }
-      },
-      {
-        "id": "v2",
-        "version": 2,
-        "promptSnapshot": "迭代 v2",
-        "createdAt": "2026-03-10T01:52:53.021Z",
-        "metrics": {
-          "accuracy": 0,
-          "latencyMs": 0
-        }
+    {
+      "id": "v2",
+      "version": 2,
+      "promptSnapshot": "迭代 v2",
+      "createdAt": "2026-03-10T01:52:53.021Z",
+      "metrics": {
+        "accuracy": 0,
+        "latencyMs": 0
       }
-    ],
-    "multiTurnRules": [
-      {
-        "id": "rule-1",
-        "condition": "用户消息少于5字且无明确动作",
-        "action": "clarify",
-        "suggestedQuestion": "您是想查询订单、商品还是其他？"
+    },
+    {
+      "id": "v3",
+      "version": 3,
+      "promptSnapshot": "迭代 v3",
+      "createdAt": "2026-05-07T05:24:58.293Z",
+      "metrics": {
+        "accuracy": 0,
+        "latencyMs": 0
       }
-    ],
-    "intentSwitchRules": [
-      {
-        "id": "sw-1",
-        "triggerKeywords": [
-          "换个",
-          "不是",
-          "我要查",
-          "改成"
-        ],
-        "action": "reset_context",
-        "description": "用户明确表达切换意图时重置上下文"
-      }
-    ]
-  }
+    }
+  ]
 }

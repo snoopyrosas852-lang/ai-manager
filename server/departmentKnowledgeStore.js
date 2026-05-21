@@ -32,6 +32,7 @@ function defaultDb() {
         parentId: null,
         type: 'folder',
         name: '共享资料',
+        description: '这个知识库还没有介绍~',
         size: null,
         mime: null,
         storageKey: null,
@@ -83,6 +84,16 @@ function readDb() {
     if (!d.audit) d.audit = [];
     for (const n of d.nodes) {
       if (n.type === 'folder' && n.excludeFromKb === undefined) n.excludeFromKb = false;
+      if (n.type === 'folder' && n.description === undefined) n.description = '';
+    }
+    for (const a of d.acls) {
+      const raw = a.permission;
+      a.permission =
+        raw == null || String(raw).trim() === ''
+          ? 'read'
+          : normalizeKbPermission(raw) === 'none'
+            ? 'read'
+            : normalizeKbPermission(raw);
     }
     return d;
   } catch {
@@ -106,10 +117,22 @@ function appendAudit(db, entry) {
   if (db.audit.length > 500) db.audit = db.audit.slice(-500);
 }
 
-const rank = { none: 0, read: 1, write: 2 };
+/** none < 只读(预览) < 只读/下载 < 协作者(写) */
+const rank = { none: 0, read: 1, read_download: 2, write: 3 };
+
+export function normalizeKbPermission(p) {
+  const s = String(p || '').trim();
+  if (!s || s === 'none') return 'none';
+  if (s === 'write' || s === '协作者') return 'write';
+  if (s === 'read_download' || s === 'readDownload' || s === '只读/下载' || s === 'download') return 'read_download';
+  if (s === 'read' || s === '只读' || s === 'readonly') return 'read';
+  return 'read';
+}
 
 function maxPerm(a, b) {
-  return rank[a] >= rank[b] ? a : b;
+  const ka = normalizeKbPermission(a);
+  const kb = normalizeKbPermission(b);
+  return rank[ka] >= rank[kb] ? ka : kb;
 }
 
 export function nodeById(db, id) {
@@ -136,11 +159,11 @@ function inheritedFromAncestors(db, folderId, deptId) {
         a.subjectId === deptId &&
         a.inherit === true,
     );
-    for (const a of acls) best = maxPerm(best, a.permission);
+    for (const a of acls) best = maxPerm(best, normalizeKbPermission(a.permission));
     const pn = nodeById(db, cur);
     cur = pn ? pn.parentId : null;
   }
-  return best;
+  return normalizeKbPermission(best);
 }
 
 /** 浏览文件夹节点本身（列入父目录、进入该文件夹） */
@@ -148,9 +171,9 @@ export function folderBrowsePermission(db, folderId, deptId) {
   if (!folderId) return 'none';
   let best = inheritedFromAncestors(db, folderId, deptId);
   for (const a of aclsOnFolder(db, folderId, deptId)) {
-    best = maxPerm(best, a.permission);
+    best = maxPerm(best, normalizeKbPermission(a.permission));
   }
-  return best;
+  return normalizeKbPermission(best);
 }
 
 /** 读取文件夹下的文件：仅继承型 ACL 自父文件夹向下生效 + 父文件夹上 inherit=true 的条目 */
@@ -159,9 +182,37 @@ function fileReadPermission(db, fileNode, deptId) {
   if (!P) return 'none';
   let best = inheritedFromAncestors(db, P, deptId);
   for (const a of aclsOnFolder(db, P, deptId)) {
-    if (a.inherit) best = maxPerm(best, a.permission);
+    if (a.inherit) best = maxPerm(best, normalizeKbPermission(a.permission));
   }
-  return best;
+  return normalizeKbPermission(best);
+}
+
+/** 作为文件父目录时，用户对「该目录下文件」的有效权限（继承 ACL + 本目录 inherit ACL） */
+export function filePermissionFromParentFolder(db, parentFolderId, deptId) {
+  if (!parentFolderId) return 'none';
+  let best = inheritedFromAncestors(db, parentFolderId, deptId);
+  for (const a of aclsOnFolder(db, parentFolderId, deptId)) {
+    if (a.inherit) best = maxPerm(best, normalizeKbPermission(a.permission));
+  }
+  return normalizeKbPermission(best);
+}
+
+export function canDownloadFile(db, fileNode, deptIds) {
+  if (!fileNode || fileNode.type !== 'file' || !deptIds?.length) return false;
+  for (const d of deptIds) {
+    const p = filePermissionFromParentFolder(db, fileNode.parentId, d);
+    if (rank[p] >= rank.read_download) return true;
+  }
+  return false;
+}
+
+export function canDownloadFilesInFolder(db, folderId, deptIds) {
+  if (!folderId || !deptIds?.length) return false;
+  for (const d of deptIds) {
+    const p = filePermissionFromParentFolder(db, folderId, d);
+    if (rank[p] >= rank.read_download) return true;
+  }
+  return false;
 }
 
 /** 用户对节点是否可见（列表/下载） */
@@ -182,10 +233,12 @@ export function effectivePermissionForUser(db, nodeId, deptIds) {
   let best = 'none';
   for (const d of deptIds) {
     const p =
-      n.type === 'folder' ? folderBrowsePermission(db, n.id, d) : fileReadPermission(db, n, d);
-    best = maxPerm(best, p);
+      n.type === 'folder'
+        ? folderBrowsePermission(db, n.id, d)
+        : fileReadPermission(db, n, d);
+    best = maxPerm(best, normalizeKbPermission(p));
   }
-  return best;
+  return normalizeKbPermission(best);
 }
 
 export function listDepartments(db = readDb()) {
@@ -220,7 +273,7 @@ export function setAclsForNode(db, nodeId, acls, actor) {
       nodeId,
       subjectType: a.subjectType || 'dept',
       subjectId: a.subjectId,
-      permission: a.permission === 'write' ? 'write' : 'read',
+      permission: normalizeKbPermission(a.permission),
       inherit: a.inherit !== false,
     });
   }
@@ -253,11 +306,21 @@ export function canWriteInFolder(db, folderId, deptIds) {
   return false;
 }
 
+/** 是否可在知识库根（parentId=null）新建文件夹：至少对一个根级文件夹具备写权限 */
+export function canWriteAtKnowledgeRoot(db, deptIds) {
+  if (!deptIds?.length) return false;
+  const roots = db.nodes.filter((n) => !n.deleted && n.type === 'folder' && n.parentId === null);
+  for (const r of roots) {
+    if (canWriteInFolder(db, r.id, deptIds)) return true;
+  }
+  return false;
+}
+
 export function totalUsedBytes(db) {
   return db.nodes.filter((n) => n.type === 'file' && !n.deleted).reduce((s, n) => s + (n.size || 0), 0);
 }
 
-export function createFolder(db, { parentId, name, ownerDeptId, ownerUserLabel }) {
+export function createFolder(db, { parentId, name, description, ownerDeptId, ownerUserLabel }) {
   const id = crypto.randomUUID();
   const now = new Date().toISOString();
   const siblings = listChildrenAdmin(db, parentId);
@@ -267,6 +330,7 @@ export function createFolder(db, { parentId, name, ownerDeptId, ownerUserLabel }
     parentId,
     type: 'folder',
     name: name || '新建文件夹',
+    description: description || '',
     size: null,
     mime: null,
     storageKey: null,
@@ -327,6 +391,17 @@ export function renameNode(db, id, name) {
   n.name = name;
   n.updatedAt = new Date().toISOString();
   appendAudit(db, { action: 'rename', nodeId: id });
+  writeDb(db);
+  return true;
+}
+
+export function updateNodeMeta(db, id, patch = {}) {
+  const n = nodeById(db, id);
+  if (!n) return false;
+  if (patch.name != null) n.name = patch.name;
+  if (patch.description !== undefined) n.description = String(patch.description || '');
+  n.updatedAt = new Date().toISOString();
+  appendAudit(db, { action: 'meta_update', nodeId: id, fields: Object.keys(patch || {}) });
   writeDb(db);
   return true;
 }

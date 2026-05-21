@@ -5,14 +5,11 @@ const titleMap: Record<string, string> = {
   '/cost': '成本看板',
   '/sessions': '会话审计',
   '/toolbox-market': '百宝箱',
-  '/debug': 'Prompt 调试台',
-  '/testbench': '测评工作台',
   '/config/assistant': '前台配置',
-  '/config/skills': 'Skill 管理',
-  '/config/projects': '项目档案',
-  '/config/knowledge': '知识库编辑',
-  '/config/department-knowledge': '部门知识库（文件云盘）',
+  '/config/toolbox': '百宝箱配置',
+  '/config/skills': 'Skill 配置',
   '/config/users': '用户权限管理',
+  '/config/roles': '角色管理',
 };
 
 function formatDate(date: Date): string {

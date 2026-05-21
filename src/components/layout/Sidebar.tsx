@@ -2,22 +2,16 @@ import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
+  LayoutGrid,
   MessageSquare,
-  Bug,
-  FlaskConical,
   Zap,
-  FolderKanban,
-  BookOpen,
   Users,
   Search,
   Settings,
   User,
-  Target,
-  Database,
-  Bot,
   Store,
-  Cloud,
-  FileStack,
+  Shield,
+  Sparkles,
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useRole } from '../../hooks/useRole';
@@ -46,38 +40,20 @@ const sections: NavSection[] = [
     ],
   },
   {
-    title: '开发工具',
-    adminOnly: true,
-    items: [
-      { id: 'debug', label: 'Prompt 调试', icon: Bug, path: '/debug' },
-      { id: 'testbench', label: '测评工作台', icon: FlaskConical, path: '/testbench' },
-      { id: 'intent', label: 'Skill 路由', icon: Target, path: '/intent' },
-      { id: 'qa-knowledge', label: '对话 QA 知识库（JSON）', icon: Database, path: '/qa-knowledge' },
-      { id: 'agent', label: 'Agent 配置', icon: Bot, path: '/agent' },
-    ],
-  },
-  {
     title: '系统配置',
     items: [
       { id: 'assistant', label: '前台配置', icon: Settings, path: '/config/assistant', adminOnly: true },
-      { id: 'skills', label: 'Skill 管理', icon: Zap, path: '/config/skills', adminOnly: true },
-      { id: 'projects', label: '项目档案', icon: FolderKanban, path: '/config/projects', adminOnly: true },
-      { id: 'knowledge', label: '对话 QA 知识库编辑（JSON）', icon: BookOpen, path: '/config/knowledge' },
-      {
-        id: 'department-knowledge',
-        label: '部门资料与 ACL',
-        icon: Cloud,
-        path: '/config/department-knowledge',
-        adminOnly: true,
-      },
-      {
-        id: 'managed-corpus',
-        label: '受管文档与向量',
-        icon: FileStack,
-        path: '/config/managed-corpus',
-        adminOnly: true,
-      },
+      { id: 'toolbox-config', label: '百宝箱配置', icon: LayoutGrid, path: '/config/toolbox', adminOnly: true },
+      { id: 'skills', label: 'Skill 配置', icon: Zap, path: '/config/skills', adminOnly: true },
       { id: 'users', label: '用户权限管理', icon: Users, path: '/config/users', adminOnly: true },
+      { id: 'roles', label: '角色管理', icon: Shield, path: '/config/roles', adminOnly: true },
+      {
+        id: 'xiaoxian-avatar',
+        label: '小仙分身配置',
+        icon: Sparkles,
+        path: '/config/xiaoxian-avatar',
+        adminOnly: true,
+      },
     ],
   },
 ];
@@ -116,6 +92,9 @@ export default function Sidebar() {
   const isActive = (path: string) => {
     if (path === '/sessions') {
       return location.pathname === '/sessions' || location.pathname.startsWith('/sessions/');
+    }
+    if (path === '/config/xiaoxian-avatar') {
+      return location.pathname.startsWith('/config/xiaoxian-avatar');
     }
     return location.pathname === path;
   };
